@@ -14,10 +14,10 @@ redis_pool: redis.ConnectionPool = None
 
 async def timeout_response(client: redis.Redis, client_id: str) -> str:
     await client.zrem(MATCHMAKING_QUEUE_NAME, client_id)
-    return json.loads('{}')
+    return {"error": "MATCHMAKING_TIMED_OUT"}
 
 def match_found_response(match_data: str):
-    return {"error": "timed out"}
+    return json.loads(match_data)
 
 async def find_match(client: redis.Redis, pubsub: PubSub, client_id: str):
     while True:
