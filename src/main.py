@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from redis.client import PubSub
 import redis.asyncio as redis
-import time, os
+import time, os, json
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
@@ -14,10 +14,10 @@ redis_pool: redis.ConnectionPool = None
 
 async def timeout_response(client: redis.Redis, client_id: str) -> str:
     await client.zrem(MATCHMAKING_QUEUE_NAME, client_id)
-    return "timed out"
+    return json.loads('{}')
 
-def match_found_response(match_data: str) -> str:
-    return match_data
+def match_found_response(match_data: str):
+    return {"error": "timed out"}
 
 async def find_match(client: redis.Redis, pubsub: PubSub, client_id: str):
     while True:
