@@ -17,7 +17,8 @@ async def timeout_response(client: redis.Redis, client_id: str) -> str:
     return {"error": "MATCHMAKING_TIMED_OUT"}
 
 def match_found_response(match_data: str):
-    return json.loads(match_data)
+    match_instance = json.loads(match_data)
+    return {"match": match_instance}
 
 async def find_match(client: redis.Redis, pubsub: PubSub, client_id: str):
     while True:
